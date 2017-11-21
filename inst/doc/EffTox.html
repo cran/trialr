@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kristian Brock" />
+
+<meta name="date" content="2017-11-20" />
+
+<title>EffTox in trialr</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">EffTox in trialr</h1>
+<h4 class="author"><em>Kristian Brock</em></h4>
+<h4 class="date"><em>2017-11-20</em></h4>
+
+
+
+<div id="recap-of-the-efftox-model" class="section level1">
+<h1>Recap of the EffTox model</h1>
+<p>Thall &amp; Cook <span class="citation">(2004)</span> introduced the <em>EffTox</em> design for dose-finding clinical trials where both efficacy and toxicity events guide dose selection decisions. This is in contrast to methods like 3+3 and CRM <span class="citation">(O’Quigley, Pepe, and Fisher 1990)</span>, where dose selection is determined by toxicity events only. We provide a brief recap of EffTox here, but full details are given in <span class="citation">(Thall and Cook 2004; Thall, Cook, and Estey 2006; Thall et al. 2014)</span>.</p>
+<p>For doses <span class="math inline">\(\boldsymbol{y} = (y_1, ..., y_n)\)</span>, the authors define codified doses <span class="math inline">\((x_1, ..., x_n)\)</span> using the transform</p>
+<p><span class="math inline">\(x_i = \log{y_i} - \sum_{j=1}^n \frac{\log{y_j}}{n}\)</span></p>
+<p>The codified doses are used as the sole explanatory variables in logit models for the marginal probabilities of toxicity and efficacy:</p>
+<p><span class="math inline">\(\text{logit } \pi_T = \alpha + \beta x\)</span></p>
+<p><span class="math inline">\(\text{logit } \pi_E = \gamma + \zeta x + \eta x^2\)</span></p>
+<p>and the joint probability is modelled using the function</p>
+<p><span class="math inline">\(\pi_{a,b} = (\pi_E)^a (1-\pi_E)^{1-a} (\pi_T)^b (1-\pi_T)^{1-b} + (-1)^{a+b} (\pi_E) (1-\pi_E) (\pi_T) (1-\pi_T) \frac{e^\psi-1}{e^\psi+1}\)</span>.</p>
+<p>Normal priors are specified for the elements of the parameter vector <span class="math inline">\(\boldsymbol{\theta} = (\alpha, \beta, \gamma, \zeta, \eta, \psi)\)</span>.</p>
+<p>At each dose update decision, the dose <span class="math inline">\(x\)</span> is acceptable if</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_T(x, \boldsymbol{\theta}) &lt; \overline{\pi}_T | \mathcal{D} \right\} &gt; p_T\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_E(x, \boldsymbol{\theta}) &gt; \underline{\pi}_E | \mathcal{D} \right\} &gt; p_E\)</span></p>
+<p>and is no more than than one position below the lowest dose-level given and no more than one position above the highest dose-level given. The net effect of these last two criteria is that untried doses may not be skipped in escalation or de-escalation. <span class="math inline">\(\underline{\pi}_E, p_E, \overline{\pi}_T, p_T\)</span> are provided by the user as the trial scenario dictates.</p>
+<p>The utility of dose <span class="math inline">\(x\)</span>, with efficacy <span class="math inline">\(\pi_E(x, \boldsymbol{\theta})\)</span> and toxicity <span class="math inline">\(\pi_T(x, \boldsymbol{\theta})\)</span> is</p>
+<p><span class="math inline">\(u(\pi_E, \pi_T) = 1 - \left( \left(\frac{1-\pi_E}{1-\pi_{1,E}^*}\right)^p + \left(\frac{\pi_T}{\pi_{2,T}^*}\right)^p \right) ^ \frac{1}{p}\)</span></p>
+<p>where <span class="math inline">\(p\)</span> is calculated to intersect the points <span class="math inline">\((\pi_{1,E}^*, 0)\)</span>, <span class="math inline">\((1, \pi_{2,T}^*)\)</span> and <span class="math inline">\((\pi_{3,E}^*, \pi_{3,T}^*)\)</span> in the efficacy-toxicity plain. I refer to these as <em>hinge points</em> but that is not common nomenclature.</p>
+<p>At the dose selection decision, the dose-level from the acceptable set with maximal utility is selected to be given to the next patient or cohort. If there are no acceptable doses, the trial stops and no dose is recommended.</p>
+<p>There are several published EffTox examples, including explanations and tips on parameter choices <span class="citation">(Thall and Cook 2004, <span class="citation">Thall, Cook, and Estey (2006)</span>, <span class="citation">Thall et al. (2014)</span>)</span>.</p>
+<p>The MD Anderson Cancer Center publishes software <span class="citation">(R. Herrick et al. 2015)</span> to perform calculations and simulations for EffTox trials. However, the software is available for Windows in compiled-form only. Thus, trialists cannot run the software on Mac or Linux unless using a virtual machine. Furthermore, trialists may not easily alter the behaviour of the model. Brock et al. (submitted 2017) describe a clinical trial scenario where some alteration of the default model behaviour would have been preferable. It was this that prompted the author to write the open-source implementation provided in ‘trialr’.</p>
+</div>
+<div id="efftox-in-trialr" class="section level1">
+<h1>EffTox in <code>trialr</code></h1>
+<p>We will work with the advanced prostate cancer example given in <span class="citation">Thall et al. (2014)</span>. They investigate the five doses 1, 2, 4, 6.6 and 10 mcL/kg, seeking the best dose with</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_T(x, \boldsymbol{\theta}) &lt; 0.3 | \mathcal{D} \right\} &gt; 0.1\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_E(x, \boldsymbol{\theta}) &gt; 0.5 | \mathcal{D} \right\} &gt; 0.1\)</span></p>
+<p>Thus, we have <span class="math inline">\(p_T = p_E = 0.1, \overline{\pi}_T = 0.3\)</span> and <span class="math inline">\(\underline{\pi}_E = 0.5\)</span>.</p>
+<p>The parameterisation for this trial is loaded by default in the MD Anderson EffTox app. It can be loaded in <code>trialr</code> using the command</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trialr)
+dat &lt;-<span class="st"> </span><span class="kw">efftox_parameters_demo</span>()</code></pre></div>
+<p>Their hinge points on the neutral utility curve are (0.5, 0), (1, 0.65) and (0.7, 0.25). The curvature parameter for the utility contours is calculated using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">efftox_solve_p</span>(<span class="dt">eff0 =</span> <span class="fl">0.5</span>, <span class="dt">tox1 =</span> <span class="fl">0.65</span>, <span class="dt">eff_star =</span> <span class="fl">0.7</span>, <span class="dt">tox_star =</span> <span class="fl">0.25</span>)
+p</code></pre></div>
+<pre><code>## [1] 0.9773632</code></pre>
+<p>The utility curves in this particular example have curvature parameter <span class="math inline">\(p \approx 0.977\)</span>.</p>
+<p>We fetched the <code>dat</code> object above by calling <code>efftox_parameters_demo</code>. That function is provided for convenience. It is just shorthand for</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">num_doses =</span> <span class="dv">5</span>,
+  <span class="dt">real_doses =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="fl">6.6</span>, <span class="dv">10</span>),
+  <span class="dt">efficacy_hurdle =</span> <span class="fl">0.5</span>,
+  <span class="dt">toxicity_hurdle =</span> <span class="fl">0.3</span>,
+  <span class="dt">p_e =</span> <span class="fl">0.1</span>,
+  <span class="dt">p_t =</span> <span class="fl">0.1</span>,
+  <span class="dt">p =</span> p,
+  <span class="dt">eff0 =</span> <span class="fl">0.5</span>,
+  <span class="dt">tox1 =</span> <span class="fl">0.65</span>,
+  <span class="dt">eff_star =</span> <span class="fl">0.7</span>,
+  <span class="dt">tox_star =</span> <span class="fl">0.25</span>,
+  
+  <span class="dt">alpha_mean =</span> <span class="op">-</span><span class="fl">7.9593</span>, <span class="dt">alpha_sd =</span> <span class="fl">3.5487</span>,
+  <span class="dt">beta_mean =</span> <span class="fl">1.5482</span>, <span class="dt">beta_sd =</span> <span class="fl">3.5018</span>,
+  <span class="dt">gamma_mean =</span> <span class="fl">0.7367</span>, <span class="dt">gamma_sd =</span> <span class="fl">2.5423</span>,
+  <span class="dt">zeta_mean =</span> <span class="fl">3.4181</span>, <span class="dt">zeta_sd =</span> <span class="fl">2.4406</span>,
+  <span class="dt">eta_mean =</span> <span class="dv">0</span>, <span class="dt">eta_sd =</span> <span class="fl">0.2</span>,
+  <span class="dt">psi_mean =</span> <span class="dv">0</span>, <span class="dt">psi_sd =</span> <span class="dv">1</span>,
+  
+  <span class="dt">eff =</span> <span class="kw">c</span>(),
+  <span class="dt">tox =</span> <span class="kw">c</span>(),
+  <span class="dt">doses =</span> <span class="kw">c</span>(),
+  <span class="dt">num_patients =</span> <span class="dv">0</span>
+)</code></pre></div>
+<p>Refer to the published paper for information on the normal priors.</p>
+<p>To study the method, let us say that we have treated six patients in two cohorts of three at dose-levels 1 and 2 respectively. Let us also say we observe no toxicities and one efficacy event in cohort 1, and one toxicity and two efficacies in cohort 2. We record this information in the <code>dat</code> object that is eventually passed to <code>rstan</code> to perform posterior sampling.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat<span class="op">$</span>doses =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>)
+dat<span class="op">$</span>tox   =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+dat<span class="op">$</span>eff   =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>)
+dat<span class="op">$</span>num_patients =<span class="st"> </span><span class="dv">6</span></code></pre></div>
+<p>This completes the information required by EffTox to calculate the next dose. We invoke the prior-to-posterior analysis by calling the <code>rstan::sampling</code> function with the pre-compiled EffTox stanmodel<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> in <code>trialr</code> and our data list. We set the seed for reproducibility.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp &lt;-<span class="st"> </span>rstan<span class="op">::</span><span class="kw">sampling</span>(stanmodels<span class="op">$</span>EffTox, <span class="dt">data =</span> dat, <span class="dt">seed =</span> <span class="dv">123</span>)</code></pre></div>
+<pre><code>## trying deprecated constructor; please alert package maintainer</code></pre>
+<p>The call to <code>rstan:sampling</code> prints logging information to the standard out stream. It has been suppressed here for brevity.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">efftox_process</span>(dat, samp)</code></pre></div>
+<p>The call to <code>efftox_process</code> extracts the most pertinent information from the sampling object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x<span class="op">$</span>recommended_dose</code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<p>We see that dose-level 3 is recommended for the next cohort.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">efftox_analysis_to_df</span>(x), <span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
+<table>
+<caption>ProbEff and ProbTox are the probabilities of efficacy and toxicity at each dose. ProbAccEff is the probability that the efficacy rate exceeds the desired threshold and ProbAccTox the probability that the toxicity rate is less than the threshold. All probabilities are posterior means.</caption>
+<thead>
+<tr class="header">
+<th align="left">DoseLevel</th>
+<th align="right">ProbEff</th>
+<th align="right">ProbTox</th>
+<th align="right">ProbAccEff</th>
+<th align="right">ProbAccTox</th>
+<th align="right">Utility</th>
+<th align="left">Acceptable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="right">0.306</td>
+<td align="right">0.088</td>
+<td align="right">0.178</td>
+<td align="right">0.926</td>
+<td align="right">-0.533</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="right">0.630</td>
+<td align="right">0.098</td>
+<td align="right">0.758</td>
+<td align="right">0.928</td>
+<td align="right">0.100</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="right">0.834</td>
+<td align="right">0.212</td>
+<td align="right">0.920</td>
+<td align="right">0.734</td>
+<td align="right">0.331</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="right">0.887</td>
+<td align="right">0.301</td>
+<td align="right">0.936</td>
+<td align="right">0.629</td>
+<td align="right">0.301</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="right">0.907</td>
+<td align="right">0.359</td>
+<td align="right">0.938</td>
+<td align="right">0.572</td>
+<td align="right">0.251</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<p>This confirms that dose-level 3 has maximal utility. We see that dose-levels 4 and 5 are unacceptable. This is because dose-level 3 has not yet been given. No doses are inferred to be too toxic or inefficacious yet.</p>
+<p>We can produce contour plots.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">efftox_contour_plot</span>(dat, <span class="dt">prob_eff =</span> x<span class="op">$</span>prob_eff, <span class="dt">prob_tox =</span> x<span class="op">$</span>prob_tox)
+<span class="kw">title</span>(<span class="st">'EffTox utility contours'</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAJACAMAAABSRCkEAAAA7VBMVEUAAAAAADoAAGYAAP8AOjoAOmYAOpAAZrY6AAA6ADo6AGY6OgA6Ojo6OmY6OpA6ZpA6ZrY6kJA6kLY6kNtmAABmADpmAGZmOgBmOjpmOpBmkJBmkLZmkNtmtttmtv+QOgCQOmaQZgCQkDqQkGaQtpCQttuQtv+Q27aQ29uQ2/+2ZgC2Zjq2ZpC225C227a229u22/+2/7a2/9u2//++vr7bkDrbkGbbtmbbtpDb29vb2//b/7bb////AAD/ADr/AGb/OgD/Ojr/OpD/ZgD/Zrb/kDr/kNv/tmb/tv//25D/27b/2////7b//9v///+l/hySAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAfPElEQVR4nO2dDX/jxnHGcZJ9UuqmTiM67ktyapr05ei2dnpG05eT7fqsoLJJfP+PUwALkAAJkIOdWew8i3nyi6wjh7OQ9q/ZmVlwmZUmE0NZ7AswYcsAMrFkAJlYMoBMLBlAJpYMIBNLBpCJJQPIxJIBZGLJADKxZACZWDKATCwZQCaWDCATSwaQiSUDyMSSAWRiyQAysWQAmVgygEwsGUAmlgwgE0sGkIklA8jEkgFkYskAMrFkAJlYMoBMLBlAJpYMIBNLBpCJJQPIxFJaAOVZp9fvy/0X91n2C/d1e3giu6O72//Lu3L/WPk6fnEPesn7haqVMEBF/d8H99ULoB8/vzkHqHnQR94v1K2EAcqzV2/L9qsXQNusm/I2+AwfnCnvF+pWagAdJ6lh5tUnzde39QMVBR08//lXWfbR31ZIvNxnLsp0r3PTvNtkD87Bzb8PI1DntfFURbc33XB/rEb66DdD7zW9//xFln3cIVz7Pj7bG6u2/P3n2c1X5X9Ufl59+tUSvy0RrRKg/BCl6m8f6i9vDq8iAHTz926cXlBpQ9zDmfesvYAOoN6zQ4Dco+3TOMEqNYA6vSkHS1itA0BV2GlWuHriqgdf/f7+sEANJnWbjeRAzYOVhzeNVRfSqlj0y/c/btrnDt6rrx9/1X7vPPefPQHo9Vflf9Uu35d/dCRCaI0Abfvxo5rR7GBCBci5Kk4DV/7pl0PvLrRVQ9x1j/efPQGo9lWZfvzlkr8xtlYIUJcRt89ss/7fOw0gt1ZuD4Grl2QPvLshXKQ6euuePcmB3rpXZ12KhKHUAOolD1MAdStPG0CK+14AOoalywDVa5ib+YHrU+9nAA2e7Y/VXeaPn7uk6R8D/pZEtUKAhhGo+Zs/pEBUgGpfR8+sCDQEqELod58Mrki5VgjQMAeqVr1PemuYMy+yKwDVdp+ccVf8/B9Oc6ATgEaeLbIhQPWV/hanDEsNoE6H+blShdXf/8/mOHvNoz8+Hif1FKDWX5N7H1OnioJf1AbVwjSswo4Aue9ParThWG01V69jFoGiiAZQrxdTV/Fv62nrUpgGjLajU4z0gdyDTWAaRIntsc096AMdASrO+kD9sbrL/OLQOALRKgFy3eBfl936UU9/V5C/VFnsp//W5Mf7uon85QlAzYNflX3oGjWd6F8PvQ8A6l54fLY/1uEyaz/Zz60Tnbz62xhrlgHkpypNgclzg8oA8lG1KAHtNgSVAeSjCqBXv4x9ETpkAJlYMoBMLBlAJpYMIBNLBpCJJQPIxJIBZGLJADKxZACZWDKATCwZQCaWDCATSwaQiSUDyMSSAWRiyQAysWQAmVgygEwsGUAmlgwgE0sGkIklA8jEkgFkYskAMrFkAJlYMoBMLBlAJpaEAcou6euLz3pZfk23TMol2SPR7twsFkAXnvv6a6qXGZaJuZQemmh37k8hQMbP8obUazw30weQ8bO8oT8/GgGiuggwMwHmMMDPI70u0flZDiB3Ev+FD5OZdBeCH4ywEo0f/wSoDAVQ3h3rVkyd7zblbr38iI8tH6jGHgwC0P7xeKD7xEHYE+4CrAxxlyWyofoCbMIuCEC7zeFg22JiERt3FzetQYgWAfjxT6BrqYpAcRebpPhZogBrFCoHakPQrBxotfEnBJLCDiftAlVhzfnI2YUPIxpxFzVYpJZACw89PbCePpDxo9hw2k4RQNSXrpcfZQVYo9AA5dQqDGSyIbBYMlFaOALNvwvgTBCTDVGpsRPoWnqWMKIgJhtiSZQJVGgArXelkzYUWujAADJ+Fje8YocFkPEjNraUXaC9sGOyPGsv7IqSK+CxC7BGYSLQ/vHaxzz6AISxr4XBj0QB1ijYDWV3lw08ADJ+xMaW4ydYDlRc+ahiH4DIhlFXuoguYyx0OEl0CH4wIlU0Q4odDEDGz+KGJDsUgDDKqrR2UFMCKLl7FcXHjnWrGQZAxs/ihlQ7CICSayBSDXUXYI0QAEouLU6jgHcCAMj4Wd6QHiMRACIbQkw2xA5qSgCBpDUQCTR5aKohAEAgZdVa+VEPkMUfMZfyoNVSDlByBbx8FhKXH+UAGT+CY4sP3Ug1QKvlB+FWj1aaAUJ5s3NElzELeCfFAKHwA7FVJj50J80AUX0ZP3KG1KEP0gsQxmRjYBGOH70AJcdPRCyCJUClXoAw+AmQpuEU8E5KAcJYbEAyJaqdDz9KAcJYbNLixycBKpUCZPxoNhxKJ0BUL8mtdGTDWAXYmZlGgGLmsBiRKh4/AAAFoWKl/Ign0OdmCgEi+4CY7LgrHdXOOwDpAyguPxCkaeJHHUDGj17D0Z9FGUAB+EltpQuQUnHsdAGEEiwQEuhl+NEFEMYUpsaPdwHWSBdA1FcnlylRDSMm0BOPawIIY7JjZiu6CrBGigDC4CetOzhYBVgjPQAZP9ctoxlO26kByAp4OZdLvldDDUBkJRepxF0u+l4fOICMHzGX7AS6FhpAGGUVhEuZQAUGkN2rKGYotNBhAWT8LG94xQ4KoKj8QCxLS+2AHYUE0IrvVRQfW2yhAwIIZQMDgh+JAqwREkDylonxs2wB74QDUNzJBogWcTqNMAAZP2KGYgl0LRSAMBYbjJVONNEGAQgjWCS2A58QQCjBYn38oAAkbrjeBrRcAdYIAqDE0mKITJtqBwDQihvQ+vkJBdA2y+72j1k2+enxcwAiG0JMNsRKR08FwgCUv35fMXRXlrvNA9cdRloDgUUAfsIAtH+ssClevS0dSix3GGVVWvxEB2i3qVau4uZd2X31d2f8aDYs1UcglB34iC4jJtC1AudADUr+7lD4gcAiCD+6qzCUxQaBH/l7pZ1U94FWG3/072AcpBkgjGABEVaC8RMcoNy/CjN+BMcWN+y0cATKDrpqGmAKk9uUFR97Nj96l7C4/GA0gCIXYI20AmQNRDmXAdbOowIB1JTwlSYyoKvuMJIVlMWTaufBT6hGYtb2D4vMq5GYWloMkSl58RNwK8PJayvD+JF0KW44ULjNVCevzVTjR9CluOFQGiNQ3LQYA4tYBdiZWagcqA1BPjmQ8SPnUpyfhQCqFjFXhU3En0vuMBYbDH7EE+hzM3V9oNQaiBBbHYz3+mgDCIUfhGVpCX60AWT8RBmbMbIugNabFiPcAj1qpwqg9BqIAFjw+FEGEPXVxo+goXcB1kgTQKstqxB24KfMFAFkDUQ5l/L86AfI+JFzGaDSn3pCDUBRFxuI23X0JdC11ABEVnJpMUCmfeEa4QAyfpY3vHSNaACttqyKmCldtAMDKL1Wo7jLhW/1wALI+IlhePFZMIDEDVPjZ8kCrBEUQBhpMQQWUvwgAQTSQEyMn5QAkrdcLz8SBVgjHIBSS2siYiHIDw5Axs91w4ULsEYoAFkDOoJLih0IQCtOi/UWYI0wADJ+JF2KDg0CENnQ+JEyJA4NARBGWgNyB5BcAdYIAKDIDUSMsBKjAGuEABDZ0PiRM6QOrR+guA2gxAYX50c/QCgNRIxIJe1QP0DGj2bDUj1AKGVVWvFnBj/KAUovLY6HRRh+dAOUXvwB4GdOAlRqB4jqzfiRG3seP6oBSq0BhJFAE+06KQYoNX4CDB63AGukFyCUAj4xl1TDTmoBQuEnLSxm86MWIONH0qW44VFKAcJIYZPj57rl7ekDOgECSYsxEiBJw9szglQCZPwIuhQ1RAGI7CYmFYnxQxn7tjxbxDQClFoDCOIOICo/+gFK7g5WkASaYHNb1h/XPiRIIUBkH8bPsoYVOTVAQ4LUARQ1WUHJqciGoplSHYDUA4TCT1oJNI2fo3qPKgMoPSqS4ads48/pg8QxlgEIZArjllWxMqVRfnQBlB4/yvs6swxH+VEGEPXVxg/BUthwPAD5AFS4D2TuPtnbT2PjrpifAIOTDTkL2HyAdpvszn23f8xu3k1Zb6unXu6z7NXby+56gmkgRkyL42XaU/zMBWj3qz4zw3/11PDzs7c1bxNxagQg6pUYP4IuqYZT/ITJgXabhwqiJlLlr9/T3KXXAEJwSednYYDeVCvcQ/1tMbHM+efkKPwgkMbnxwOgYxY0rTr65PMiEFXGj5xLAX68IlBeOXy4aLzb3LxrQlAxlUX7AoRSViHwwyzg2yepgw0NrzLU1vqTscoTIJC0GKNVLcGPfw5UIzRdxs92RxMKFQBhhW54kR9PgIqmj7h/nEhw5rojy/hZ3vByAPIBqMqiM0fOVInVUy5YhSXXAFJ/B1B5lR+vKmyyvUy6nFbzX7tmfsS3yqT48QHoM8cPIfxIjHtUaouN9rdg1Lr+l+4P0NTiNNMdWSit6gAudRbwrQl1yNZwe1yELpXx+0dnMwnZbICsgSjpkmZGyTT8I9Al5R1dxRRmcwEyfiRdEu0omWqQvbB2H6yW0FYGSLISd6UjGwoGoHCbqa1kNlPXW1YpLuBbK+Ko3f1Am4e6DXQ5v5GPQBhUrJGfQPdE5939riI5kMWfCC6prbpAN9V3YWpyr2OGO5gGIgAW4vx4AbStsJgMLfPdXVNqVCDwQyrAnCF15KPhtgkru83V28pExk0uWQHhJxxAXYm10FYGSgMaYqUTTqAb09mGXYm1zFZGelSkxY/PEuZKrJd7VhJEHDe9ZCUxfryS6Podg9NvGZQcFyQEoORUNLN599qoem/8qUCoQIlUNLOZ92ppBsj4EXVJtJt5r59igJJrC0K0qufeLBpkL0xmXBR+MBrQgfhRHIFSW2zS5MenD/TfM4fwGze9BmKAwaVderzZwacT7fYw9n8XcglLjx+ASOXzZhmPJaxoekB50BwIJYVNip+5BZh7jYehu2M+5G48yBRCLEshdlD7L/IxrAlinZB4Zdw184OUQDev8jDcZtlvHqfvFWOPu2Yq0PjxO2CqXr2KYDlQcm2dhOOPF0B/7UJPqCoMhh8I0kLzo7CRiLKEGD/ulR6GQW/nSK8BhDA4mZ8zh159oDoHyuVPqq+VHj9REyCiHTkAnTtk3NLKKsMmxl0zP1TDmPxIABTypnqQP2yIsmoZfnRFoBkziMEPBGksflTlQCBzvVZ+xodWVIUlt35B8MMowNzLia8O3weCaQumlVMxCjD3euI4CwBEfSkMP2kl0FMOiAMd7olm7sJPjrveZAWCH/0AkWWkyRny+cEDCIUKhJVOgB84gFCWkMT4EQToeE700ifV1wrSagwxOtkw4mVK8AMWgUDyH4xNNV4H+uCFOJoKgECiSmL8XPaIBFBybR3sAr71Q/SiACAYfhBIk+JHUSf6qlCWkKQa0Fc9zo1Av+qXXsN/zdJ8gFDSmgAu5QcXKcCcJ/KQ7j/HT43fPy75obv0X+J60+I5O/ASBZhzRRxycD+QU5B7oqeEMtdr4wclBwKJPyh3AEklQCUKQCBUYJAmyo8XQM1+Bu+t8fMASq6BmA4/fjlQnf3kvHta5wAEkoJgZNoiO6h9f0Rv5+/K2IZ4X9iYYJLdqExSDYX5Ufa+sFGhUAER0yQLMOeQOHA/ArlGUJB3pp4rbgMoMX4y4QSoZLwvrFgmB7IGoqQl/QwO+pI4z3DxG8pQ5hqCNPn4o74PtOb4A8GPcoBA+MHYlJUu4FuvHoaLfV4YyFxjxLQw/IQ9XOHlftKGMi5GYrpufsIc70JItQnjppbCgjQQ5yRAZahGYvup8qwIBMPP+nbgB45nG5IOmNpt6mc5AFkDUXLwYPyEy4G2VZbNACjEDGLslmPxE7AKy7MHDkDU64JZlTAaQIsARNTL/UfeAKFEldXzw8iBrmv/OL3MXR4XpNjGWBNnnEI/nx9GFcbTxXFB5hqEtKD8eCXRc3ZRc48+EEgJBLJ6BkygG/ezDVkf+31sME7bpJaCJM2Pws3UGfOCQlpyO6j9AcQNme5g5tr4cSPMNcxJ70l1n8t7YZmbGjfuDII0EBXxMxug/HKDuVXefaZzMfXhzhPjwsQKiEgVoIA/s5sJkGsCXbufvtcqmjKdAoh6OSApbPL8+B0wda2Q77WKpkzHxwUptjE2ZUPwsxBAvhEIhIrV3gE0BnkQgI5b9bNyIJAZBIlp8gn0qF0YgA7dxslkaWTcyA0g+ugxLSPyM36RgQAiuusryLxAJCtxC/jK5e6p1g9eQ6t5Y2GQeUmsrAqVQL9885P30Oo60VcFQwUMP2Xxrf/QcADBUIHDT/l8bfW6MDYeQGTD9VrO4Kdx+eF/qxToT5cNJ8eiDqUEIIwSKDY/8wqw3dP31dcPlwiaHhoMIJBiG/EOoEuJ0IWxsQACoQKyAfTy9H8+Y0MBBDLXkPxcqOUvjo0EEEwDiGqohB8Xe6aXsItjAwGUYKtanEm/HfgPdRk/mURfHhsHoMixAiJS+d7B8aEq46cyoCtjwwCUWqzQxA/HEAUgGH5iMjm3gShhCAJQ5PviMSxD3MFx1RADoBD8gJTlyvlBAYhsCMJPIglQCQIQxgyiNIBkb79GAChyAyjE6GRD7fwgABQ5VkCU+kH4SQQgkFixvgK+HZk6cCyAQFowcS3jFGBuaKK/WAAluK0VIv548/Phe+bgygGCmWuMBtAZFsXTBEB0eMUNJd2FmBeQtuAi/OyeJgCi/45UAxQ3AiRXwJ+7fP5+fAmj/zzKASK7S46fRQr4l29+GgVoxi9JNUAYM4jLz/67P40m0XP40QwQxgzi8lMtYKNV2Cx+FAOEMYORt084DcTmLvoxgKgu3RWIGwq5A2kBAzcQn5+cTu5lncePWoBgNhtiMinQgD6LQDP50QoQzH3xoA2gg04BmsuPUoBAZhCfn1OA5iXQzVWIGwq4swYiQfHu4Bhehrgh3x3KHfS4BfyU4Xx+NAIEMoM4/FB9+vCjEKDkYkXs9SsoPxoBIvtYsWUAfuYXYO5KxA2Z7kBmMDY/kW6hH7kUcUOeO5gGIn10WcvbMsgdrL78aAMIZrMqluVt9T9F8UcbQEnNdRDLCqCoBfyZnSqAUPiJ136qFrDsVhM/qgBCiADzLAMkQFl2Kz44p9JXBFBasWLe6ERLl/8QCZJPoMc86gEIYgZnWYr/RF3+TCJoGX40AUR9aXqkUS1v2wYiBaAABfyooRqAIGYwruXtUYKjMxLoWmoAIityAyjE6FRDXQW8ExxACbYaqYYa+YEDKHKsiJmoheCH36oGAwhkrmPzs1ACXQsLIBR+QO5gldgqCwRQXv28zUfH5xMfzesFEEisCEJa3PizNED5q7flbnNXygKE0gAKs36x7uB4fno6/zQnkXsVgwC0f3xovr5+LwkQSqxQeAf087dlWZwSJPNLCgLQbtMsX+X29Xs5gOJugMVuALF87upP1N1/98NVQ7rLgwJGoErbOzGAUOZabQPxBCCpTClQDtRis9tkQgDF5idm+0mmAHseLGFiP1CwKswtYvtHKYBQLJUW8MXJB8OL/UGA9IGMH7bP/Xe9t8HLXSYGQCBzrZmfQRkmeJmhARJJooNkIBj8CDYQjx8ML3mZC0eg7KAZL0qPisUaiE4nn+st+mZngCUsLj9RW9VS61d9ClB9Juu80UmG+gECiRWRG4hXrrP3ud7C+UAggPaPbqGayIBmuAPZLFfcAPK1pBkGaiRmbSu66L7xdYcSK9bKT+CtjAql1+857tKLKnHvAJKvZ4NuplYqWGV87LkOYbl8A6hvKe5SdQSKzU/M9hMIP8FyoDYE8XIgGH70FvBDS3mXoaqw3cZVYRPxh+YuuVUJhZ8Zlpr7QCBzjcNPANI0A5TeBljkO+iD8KMXIBQqwvAD0ABqpRWg9DbAYPhJAiCUWLF6fpQCZBtgsUafy49OgNKLKmH4iZ1A19IIEA4Vqy7gnRQCZPxIj0419OBHIUCx+UlvAyxcAlSqBIjsAySq0IcH5EcfQOnxE+IdGEHuAPLhRxtAYdYvkFY1WAHvpA0gsgOQVSndBlArXQClF1VS50cXQOlFlXQbiJ00AYQSK2LzQx9dnp8zQ0UApbgBFqKAp48ub3luqAegEH9YsZsCVEOU9WvEpRqAcNYv+XmJzQ/VcsxQDUB0JddqnHNWiTZ+8ABCiSqR+VnsXlc8gEJYgmyAKeQHDqDk+DnZANt/93RyHKaPzwXvtQcDKL1W9TAA7b/75qfy+emHUVON/IABhBJVvAswdxjd87djpnEbiEkAhPJeQ24Bf/axFrN8LrtVhgRQ2Fbjy+ifvd/wVMOJBPrDyKXE3QCbtgQCKGxU2T1dAWg5foqRLDpySjf9FA5AYTfAiqcrAC3XACpGcmi1/OAAFDZXqf7oi4sAocSfIK3qS0+iABQ+170I0HIbYM8L8SNFGghAC/wKLwG03B30z4fPIwg7ulikwgBoiT/BCwCFyX/GfgUvY11oxfEHBqAFLKcBWnAD7Pmp0fCz4cRHl1ySIQBa5E9wEiCUd4DFsQQAaKEbOKYAiv0OsEXbgvMtEQAKYXluOgEQzjt44rSq9QO0VAowDtC6+UkBIP2/ws6UaohyBzTNUjtAcUuQBN+BIf0jKQcobvwxfq5LN0AoUSUyPzHfq6EaIIs/wsMHsNQMEEpWHOYdzBj8aAYoNhV0ywD8aG9AH6QXoNj8yHeAU+RHL0CxowrdEmYDLMRfpFqAYscfumXkBjTdMgg/WgGKzU+AaiWpDYyjdAIEE1Vir19x/85qqQQodlYchJ+UNsB60gkQ2Q3KHyvMBsZcfjQCBLN+wdzAEaaAdwoE0P7Rfez3zbvZ7lCy4tjrV5CoMpufQADl2YP7pui+obuz9Ut4+JDxJxBA+8cDNvnr9/PcoWTFCeY/8xOgMhBAu82b7ttiYhGbcBf794LCT+zs7yhlESgtfm7L5PkJlgO1IWhmDpTW+nVb/S/6Bmq4At4pUBW227gqbCL+TLhDyYqJlhVA0fmhW/rxo6oPhLN+URew7Dby+hU6/qgCCGf9ogagLLulOw1hGbSAdwoNUE6uwhJbv9r8h0oQaPxZPAJlB50+E+SPJabT22YDnghQkJ9pESlawtLS7cl/U5UBFEgGkK9hI8Zmahq6PSr2pYSVvs1UE5SUbWWY0KRsM9WEJotAJpZ0baaa4KRqM9WEJ+sDmVgygEwsGUAmlgwgE0sGkImlaACZElEkgJbxH8IpzIUq++kNoIA+cZwaQCp94jg1gFT6xHFqAKn0iePUAFLpE8epAaTSJ45TA0ilTxynBpBKnzhO9QJkSlwGkIklA8jEkgFkYskAMrFkAJlYMoBMLBlAJpYMIBNLBpCJJQPIxJIBZGLJADKxFAigIstevR39h5DT5rC9iSNCfH3W2k6eG+Hr9OU+y+74PodO8+qnf3PJmqqXPzsc9OQ3TWEAKqorKbqrGfxDyOn+sfom50/M6bUV0wePeDotKoe7DZ+ggdO8/ocEQbvN4aQwz2kKApA7iWp7d/4PKacv9/Vvb+q4cz+fZXN8DR+gkZ+efaGnTu9KiV9pHXS6K/OdpiAADaZXaK7H/LDj2qnP/PVv+QANf/qfSSzeJ06lACqyh8NZhb7TFAag5rdW9H+FU4cqejp12nKdnvis/imQAw2cFjd/2Egka8MrFVvCBj976TNNQQBykaGND4N/SDl1j7AnZuizjuICAA2c5vUa4SKGnFO5uuRIjO80AQNUyOTQR5/1yaHiAL2Sib/DK61D78u9QBGqFKBFljB+/Bm7UOklzCUVLsEQcyqVVpal0iVsiSQ6l+gCDXzm7cEm7LnuO3Uzwk+lh06FgnrZB0hTEh2+jD+eOCzos5ZABBo4dYez8+PvSBOD77TvRFUZH76RKJMAjFybRCd62POrHPZOaJdxGiAHUtVIbJaD+lpc+ZELlQw9p+1yw3c7uNBSaCtj4LSQ2XMZOt0KOXUAcabJNlNNLBlAJpYMIBNLBpCJJQPIxJIBZGLJADKxZACZWDKATCwZQCaWDCATSwaQiSUDyMSSAWRiyQAysWQAmVgygEwsGUAmlgwgE0sGkIklA8jEkgFkYskAMrFkAJlYMoBMLBlAJpYMIBNLBlDzPvNs5Cje3qE++8c3nVl9CmeeZQ/V//9yc/2EkN1nMmckqpUB1J6nsNucHqvQAyi/6x+7sNs8NP8nqZA4rUGxDKCOjLOjTY4ANYf89AF60577Q1AdvFKWAdSRUfGy++x39ZmY7YEsL/d/c+8OUWnOQDkAVB89X+vmDw1Eebv8bbvDzdwDzVFNdeTK0w5BBlAvArllrD4/tz5b/uW+iknNMU4NDOcRqIlC9Sma9XpW2zQnarYPFM3prG+ETqLTKwPokAPducTGHSdWTbs7Aiy/eefynS6JfhgA1OVCTbJcL3qHB6onm6MR+QdsqpYB1JHx0OY6bsKrr+1JhHVgqr8Zj0B9PIp6DTs8UIWkZvUip9uYMoBOyGgJqL51R6tWX90jEwB1569Wmc/Nv973HqjWsO1DaQClr1GA5kag5r/1l0ME2n32T00PyABKXScAneZAr9+3OdAoQB0eTaHm0u+Wl/3jnzevsBwodZ0ANKzCmo80uVaF7R/vXP5cJ1LtA4ej0K0KS12nAA37QIcjvbsqzC1px2Zi2wdqDsndNnV82xhqsyHrA5nIbeeBXv7ivfdrcWQAUZT7fFBD7lawtAOQAUSSx4bWy73rT9puvMl0QQaQiSUDyMSSAWRiyQAysWQAmVgygEwsGUAmlgwgE0sGkIklA8jEkgFkYskAMrFkAJlYMoBMLBlAJpYMIBNLBpCJJQPIxJIBZGLJADKx9P+ea4ZbO4cpbwAAAABJRU5ErkJggg==" alt="Utility contours after observing outcomes 1NEN 2NBE." />
+<p class="caption">Utility contours after observing outcomes 1NEN 2NBE.</p>
+</div>
+<p>The blue stars show the location of the hinge points on the neutral-uility (u=0) contour. The red numbers show the posterior means of the five dose-levels. Doses that are closer to the lower-right corner have higher utility. We see that dose-level 3 has the highest utility.</p>
+<p>We can also produce posterior density plots of the dose utilities. For illustration, we will just plot the densities of the three acceptable doses. The package <code>ggplot2</code> is required.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">efftox_utility_density_plot</span>(samp, <span class="dt">doses =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggtitle</span>(<span class="st">&quot;EffTox dose utility densities&quot;</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Utility densities after observing outcomes 1NEN 2NBE." />
+<p class="caption">Utility densities after observing outcomes 1NEN 2NBE.</p>
+</div>
+<p>To further facilitate the analysis of dose utility, we provide means of calculating the dose superiority matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">efftox_superiority</span>(samp), <span class="dt">digits =</span> <span class="dv">2</span>, <span class="dt">row.names =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td align="right">NA</td>
+<td align="right">0.91</td>
+<td align="right">0.86</td>
+<td align="right">0.83</td>
+<td align="right">0.80</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td align="right">0.09</td>
+<td align="right">NA</td>
+<td align="right">0.76</td>
+<td align="right">0.69</td>
+<td align="right">0.64</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td align="right">0.14</td>
+<td align="right">0.24</td>
+<td align="right">NA</td>
+<td align="right">0.57</td>
+<td align="right">0.54</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td align="right">0.17</td>
+<td align="right">0.31</td>
+<td align="right">0.43</td>
+<td align="right">NA</td>
+<td align="right">0.51</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td align="right">0.20</td>
+<td align="right">0.36</td>
+<td align="right">0.46</td>
+<td align="right">0.49</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>The element in row <span class="math inline">\(i\)</span> and column <span class="math inline">\(j\)</span> shows <span class="math inline">\(\text{Prob(}u_j &gt; u_i | \text{data)}\)</span>, where <span class="math inline">\(u_k\)</span> is the utility of dose <span class="math inline">\(k\)</span>. We can be quite confident that dose 3 has higher utility than doses 1 and 2. In contrast, the model is much more vague about which is the superior of doses 3, 4 and 5. More data may be illuminating.</p>
+</div>
+<div id="simulation" class="section level1">
+<h1>Simulation</h1>
+<p>We also provide a way to simulate EffTox trial scenarios. Simulation allows trialists to assess the performance of their design.</p>
+<p>In addition to the parameters already described, the user must provide the true probabilities of efficacy and toxicity at each dose, and a vector of desired cohort sizes. For illustration, we simulate Scenario 1 under contour <span class="math inline">\(C_2\)</span> in Table 1 of <span class="citation">Thall et al. (2014)</span>. They use the EffTox parameterisation described above to investigate performance under true efficacy probabilities (0.2, 0.4, 0.6, 0.8, 0.9) and toxicity probabilities (0.05, 0.1, 0.15, 0.2, 0.4).</p>
+<p>The preferable dose is calculated after the evaluation of each cohort and the following cohort is treated at the dose recommended. We provide the desired cohort sizes as a vector of integers via the <code>cohort_sizes</code> parameter. In the Thall example, they treat a maximum of 39 patients in thirteen cohorts of 3, thus we use <code>cohort_sizes = rep(3, 13)</code>.</p>
+<p>In the <code>trialr</code> EffTox implementation, the cohort sizes need not be constant. We can specify different cohort sizes, an option not possible in the official EffTox software. For instance, the investigators might want to re-evaluate the ideal dose after every patient in the early trial stages, where information is scarce. However, once a certain number of patient outcomes have been observed, they might prefer to revert to cohorts of three to avoid unnecessarily frequent analyses. To analyse the dose after each patient for the first 9 patients, followed by ten cohorts of three, we could use <code>cohort_sizes = c(rep, 1, 9), rep(3, 10))</code>.</p>
+<p>Once again, we need a list of data to pass to the RStan sampler.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">num_doses =</span> <span class="dv">5</span>,
+  <span class="dt">real_doses =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="fl">6.6</span>, <span class="dv">10</span>),
+  <span class="dt">efficacy_hurdle =</span> <span class="fl">0.5</span>,
+  <span class="dt">toxicity_hurdle =</span> <span class="fl">0.3</span>,
+  <span class="dt">p_e =</span> <span class="fl">0.1</span>,
+  <span class="dt">p_t =</span> <span class="fl">0.1</span>,
+  <span class="dt">p =</span> p,
+  <span class="dt">eff0 =</span> <span class="fl">0.5</span>,
+  <span class="dt">tox1 =</span> <span class="fl">0.65</span>,
+  <span class="dt">eff_star =</span> <span class="fl">0.7</span>,
+  <span class="dt">tox_star =</span> <span class="fl">0.25</span>,
+
+  <span class="dt">alpha_mean =</span> <span class="op">-</span><span class="fl">7.9593</span>, <span class="dt">alpha_sd =</span> <span class="fl">3.5487</span>,
+  <span class="dt">beta_mean =</span> <span class="fl">1.5482</span>, <span class="dt">beta_sd =</span> <span class="fl">3.5018</span>,
+  <span class="dt">gamma_mean =</span> <span class="fl">0.7367</span>, <span class="dt">gamma_sd =</span> <span class="fl">2.5423</span>,
+  <span class="dt">zeta_mean =</span> <span class="fl">3.4181</span>, <span class="dt">zeta_sd =</span> <span class="fl">2.4406</span>,
+  <span class="dt">eta_mean =</span> <span class="dv">0</span>, <span class="dt">eta_sd =</span> <span class="fl">0.2</span>,
+  <span class="dt">psi_mean =</span> <span class="dv">0</span>, <span class="dt">psi_sd =</span> <span class="dv">1</span>,
+
+  <span class="dt">doses =</span> <span class="kw">c</span>(),
+  <span class="dt">tox   =</span> <span class="kw">c</span>(),
+  <span class="dt">eff   =</span> <span class="kw">c</span>(),
+  <span class="dt">num_patients =</span> <span class="dv">0</span>
+)</code></pre></div>
+<p>The elements in <code>dat</code> reflect the point from which each simulated trial iteration will commence. Note that <code>num_patients</code>, <code>doses</code>, <code>tox</code> and <code>eff</code> convey that no patients have yet been observed. This is not a constraint. Unlike the official EffTox software, users may simulate the commencement of a partially-observed EffTox trial by tailoring these four items. To simulate trials starting from a blank canvas, these four elemnts should be set as shown above.</p>
+<p>The following code will run a simulation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+sims =<span class="st"> </span><span class="kw">efftox_simulate</span>(dat, <span class="dt">num_sims =</span> <span class="dv">100</span>, <span class="dt">first_dose =</span> <span class="dv">1</span>, 
+                       <span class="dt">true_eff =</span> <span class="kw">c</span>(<span class="fl">0.20</span>, <span class="fl">0.40</span>, <span class="fl">0.60</span>, <span class="fl">0.80</span>, <span class="fl">0.90</span>),
+                       <span class="dt">true_tox =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.15</span>, <span class="fl">0.20</span>, <span class="fl">0.40</span>),
+                       <span class="dt">cohort_sizes =</span> <span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">13</span>))</code></pre></div>
+<p>The doses recommended at the end of each simulated trial are recorded in the <code>recommended_dose</code> slot of the <code>sims</code> object. For instance, infer from the simulated trials the probability that each dose will be recommended using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(sims<span class="op">$</span>recommended_dose) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(sims<span class="op">$</span>recommended_dose)</code></pre></div>
+<p>Similarly, you can calculate the probability of each dose being given to a random patient using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">unlist</span>(sims<span class="op">$</span>doses_given)) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">unlist</span>(sims<span class="op">$</span>doses_given))</code></pre></div>
+<p>and the mean number of patients being treated at each dose-level in each simulation</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">unlist</span>(sims<span class="op">$</span>doses_given)) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(sims<span class="op">$</span>recommended_dose)</code></pre></div>
+<div id="simulation-speed" class="section level2">
+<h2>Simulation speed</h2>
+<p>The call to <code>efftox_simulate</code> will take about 25 minutes to run 100 iterations. This is much slower than the official Windows EffTox app, which would typically take a number of seconds rather than minutes. The official app is written in C++ and uses a fast numerical method for resolving Bayesian integrals with Gaussian priors called <em>spherical radial integration</em>, presented by Monahan &amp; Genz <span class="citation">(1997)</span>. In contrast, <code>trialr</code> delegates posterior sampling to <code>rstan</code>. The time it takes to run simulated EffTox trials in <code>trialr</code> is largely driven by the time it takes to run <code>rstan::sampling</code> many times. We are observing that MCMC is generally slower than spherical radial integration. However, it is also much more flexible. The trialr implementation of EffTox is easy to customise. Any aspect of the probability model may be changed by altering our open-source implementation. Non-normal priors may be used without any obligation to re-implement the prior-to-posterior analysis method. RStan handles the general model specification, rather than optimising for particular circumstances.</p>
+<p>The process of simulating dose-finding trials is relatively computationally intensive because the dose update decision is made at the end of each cohort. In the above scenario, the dose decision is performed up to 13 times per iteration. When calling <code>rstan::sampling</code>, 4 chains of 2000 draws are used by default. Thus, 100 iterations of the above scenario involves <span class="math inline">\(100 \times 13 \times 4 = 5200\)</span> chains sampled from the posterior distribution. Thus, if each call takes a fraction of a second (a sampled chain takes approximately 0.3s on my computer), the aggregate run-time is of the order of 20-30 minutes. Users can alter the number of chains used, the number of points per chain, and the amount of thinning by providing extra parameters via the ellipsis operator to <code>efftox_simulate</code>. These will then be forwarded to the <code>rstan::sampling</code> function.</p>
+<p>Simulation is a costly exercise! Striking the balance between speed and flexibility is difficult. Sometimes a slow, flexibile method will be preferable to a fast, fixed method. It pays to hone parameters on small exploratory batches and commit to large jobs when ready.</p>
+</div>
+</div>
+<div id="trialr" class="section level1">
+<h1>trialr</h1>
+<p><code>trialr</code> is available at <a href="https://github.com/brockk/trialr" class="uri">https://github.com/brockk/trialr</a></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-EffTox">
+<p>Herrick, R, C Norris, JD Cook, and J Venier. 2015. “EffTox.” MD Anderson Cancer Center. <a href="https://biostatistics.mdanderson.org/softwaredownload/SingleSoftware.aspx?Software{\_}Id=2" class="uri">https://biostatistics.mdanderson.org/softwaredownload/SingleSoftware.aspx?Software{\_}Id=2</a>.</p>
+</div>
+<div id="ref-Monahan1997">
+<p>Monahan, John, and Alan Genz. 1997. “Spherical-Radial Integration Rules for Bayesian Computation.” <em>Journal of the American Statistical Association</em> 92 (438): 664–74. <a href="http://www.jstor.org/stable/2965714" class="uri">http://www.jstor.org/stable/2965714</a>.</p>
+</div>
+<div id="ref-OQuigley1990">
+<p>O’Quigley, J, M Pepe, and L Fisher. 1990. “Continual reassessment method: a practical design for phase 1 clinical trials in cancer.” <em>Biometrics</em> 46 (1): 33–48. doi:<a href="https://doi.org/10.2307/2531628">10.2307/2531628</a>.</p>
+</div>
+<div id="ref-Thall2004">
+<p>Thall, PF, and JD Cook. 2004. “Dose-Finding Based on Efficacy-Toxicity Trade-Offs.” <em>Biometrics</em> 60 (3): 684–93.</p>
+</div>
+<div id="ref-Thall2006">
+<p>Thall, PF, JD Cook, and EH Estey. 2006. “Adaptive dose selection using efficacy-toxicity trade-offs: illustrations and practical considerations.” <em>Journal of Biopharmaceutical Statistics</em> 16 (5): 623–38. doi:<a href="https://doi.org/10.1080/10543400600860394">10.1080/10543400600860394</a>.</p>
+</div>
+<div id="ref-Thall2014">
+<p>Thall, PF, RC Herrick, HQ Nguyen, JJ Venier, and JC Norris. 2014. “Effective sample size for computing prior hyperparameters in Bayesian phase I-II dose-finding.” <em>Clinical Trials</em> 11 (6): 657–66. doi:<a href="https://doi.org/10.1177/1740774514547397">10.1177/1740774514547397</a>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The advice by the RStan team is that authors of packages that use RStan should provide static model files that are compiled when the package is installed.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

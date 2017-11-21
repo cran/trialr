@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kristian Brock" />
+
+<meta name="date" content="2017-11-20" />
+
+<title>Hierarchical Bayesian Model for Binary Responses</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Hierarchical Bayesian Model for Binary Responses</h1>
+<h4 class="author"><em>Kristian Brock</em></h4>
+<h4 class="date"><em>2017-11-20</em></h4>
+
+
+
+<div id="hierarchical-bayesian-model-for-binary-responses" class="section level1">
+<h1>Hierarchical Bayesian model for binary responses</h1>
+<p><span class="citation">Thall et al. (2003)</span> described a method for analysing treatment effects of a common intervention in several sub-types of a single disease. The treatment effects are assumed to be different but exchangeable and correlated. Observing good efficacy in one cohort, for example, increases one’s expectations of efficacy in other cohorts.</p>
+<p>They demonstrate the hierarchical model in a trial with binary response outcomes and in another with time-to-event outcomes. This vignette describes the sarcoma example with binary response outcomes. The authors provide WinBUGS code in the appendix of their paper <span class="citation">(Thall et al. 2003)</span>. We port their model to Stan and illustrate usage with the example given in their paper.</p>
+</div>
+<div id="implementation-in-trialr" class="section level1">
+<h1>Implementation in <code>trialr</code></h1>
+<p>The model is compiled in <code>trialr</code> under the <code>ThallHierarchicalBinary</code> slot of the <code>stanmodels</code> object.</p>
+<p>Statistically, the authors assume that in a trial of <span class="math inline">\(k\)</span> disease subtypes, the treatment effects are drawn from the same common normal distribution</p>
+<p><span class="math inline">\(\rho_1, ..., \rho_k \sim N(\mu, \sigma^2)\)</span></p>
+<p>As is the convention in BUGS, the authors define normal distributions by a precision parameter <span class="math inline">\(\tau\)</span> as opposed to the standard deviation parameter <span class="math inline">\(\sigma\)</span> used here. We have re-specified the model to comply with the Stan convention of using standard deviation. The authors use a normal hyperprior on <span class="math inline">\(\mu\)</span>, and a gamma hyperprior on <span class="math inline">\(\tau\)</span>, equivalent to an inverse gamma hyperprior on <span class="math inline">\(\sigma\)</span>.</p>
+<p>We observe <span class="math inline">\(x_i\)</span> responses in <span class="math inline">\(n_i\)</span> patients in disease sub-type <span class="math inline">\(i\)</span>. The rate of response in subtype <span class="math inline">\(i\)</span> is modelled as <span class="math inline">\(p_i = \text{logit}^{-1}(\rho_i)\)</span>. Each <span class="math inline">\(x_i\)</span> is assumed to be binomially distributed with success parameter <span class="math inline">\(p_i\)</span>. In Stan, that relationship is described as <code>x ~ binomial_logit(n, rho);</code></p>
+<p>The treatment is judged to be worthy of further investigation in cohort <span class="math inline">\(i\)</span> if</p>
+<p><span class="math inline">\(\text{Pr}\left\{ p_i &gt; \theta | \mathcal{D} \right\} &gt; q\)</span></p>
+<p>where <span class="math inline">\(\theta\)</span> is the minimum required response rate, and <span class="math inline">\(q\)</span> is the required certainty to approve. In their provided example, <span class="citation">Thall et al. (2003)</span> use <span class="math inline">\(\theta = 0.3\)</span>.</p>
+</div>
+<div id="example" class="section level1">
+<h1>Example</h1>
+<p>We can learn about the parameters required by the <code>ThallHierarchicalBinary</code> model using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trialr)
+<span class="kw">help</span>(thallhierarchicalbinary_parameters)</code></pre></div>
+<pre><code>## No documentation for 'thallhierarchicalbinary_parameters' in specified packages and libraries:
+## you could try '??thallhierarchicalbinary_parameters'</code></pre>
+<p>We can get an example using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">thallhierarchicalbinary_parameters_demo</span>()
+dat</code></pre></div>
+<pre><code>## $m
+## [1] 10
+## 
+## $x
+##  [1] 0 0 1 3 5 0 1 2 0 0
+## 
+## $n
+##  [1] 0 2 1 7 5 0 2 3 1 0
+## 
+## $target_resp
+## [1] 0.3
+## 
+## $mu_mean
+## [1] -1.3863
+## 
+## $mu_sd
+## [1] 3.162278
+## 
+## $tau_alpha
+## [1] 2
+## 
+## $tau_beta
+## [1] 20</code></pre>
+<p>We have outcomes in 10 disease subgroups. The number of responses is stored in <code>x</code> and the number of patients in <code>n</code>. There have been 3 / 7 responses in subgroup 4, for example, but 0 / 2 responses in subgroup 2, and zero patients treated at all in subgroups 1, 6 and 10.</p>
+<p>We invoke the model by calling <code>rstan::sampling</code> on the included <code>ThallHierarchicalBinary</code> model. We set the seed for reproducble randomness.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp &lt;-<span class="st"> </span>rstan<span class="op">::</span><span class="kw">sampling</span>(stanmodels<span class="op">$</span>ThallHierarchicalBinary, <span class="dt">data =</span> dat, 
+                        <span class="dt">seed =</span> <span class="dv">123</span>)</code></pre></div>
+<pre><code>## trying deprecated constructor; please alert package maintainer</code></pre>
+<p>The probability that the efficacy probability in each subgroup exceeds the threshold is stored as <code>pg</code>. We extract that variable and use the <code>rstan::summary</code> function to make inference.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(rstan<span class="op">::</span><span class="kw">summary</span>(samp, <span class="dt">par =</span> <span class="st">'pg'</span>)<span class="op">$</span>summary, <span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">mean</th>
+<th align="right">se_mean</th>
+<th align="right">sd</th>
+<th align="right">2.5%</th>
+<th align="right">25%</th>
+<th align="right">50%</th>
+<th align="right">75%</th>
+<th align="right">97.5%</th>
+<th align="right">n_eff</th>
+<th align="right">Rhat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pg[1]</td>
+<td align="right">0.545</td>
+<td align="right">0.009</td>
+<td align="right">0.498</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3413.914</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td>pg[2]</td>
+<td align="right">0.088</td>
+<td align="right">0.004</td>
+<td align="right">0.283</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4000.000</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="odd">
+<td>pg[3]</td>
+<td align="right">0.945</td>
+<td align="right">0.004</td>
+<td align="right">0.228</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3563.526</td>
+<td align="right">0.999</td>
+</tr>
+<tr class="even">
+<td>pg[4]</td>
+<td align="right">0.738</td>
+<td align="right">0.009</td>
+<td align="right">0.440</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2569.219</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="odd">
+<td>pg[5]</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">4000.000</td>
+<td align="right">NaN</td>
+</tr>
+<tr class="even">
+<td>pg[6]</td>
+<td align="right">0.540</td>
+<td align="right">0.008</td>
+<td align="right">0.498</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3788.529</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="odd">
+<td>pg[7]</td>
+<td align="right">0.699</td>
+<td align="right">0.009</td>
+<td align="right">0.459</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2663.451</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td>pg[8]</td>
+<td align="right">0.916</td>
+<td align="right">0.005</td>
+<td align="right">0.278</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3020.428</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="odd">
+<td>pg[9]</td>
+<td align="right">0.174</td>
+<td align="right">0.006</td>
+<td align="right">0.380</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4000.000</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td>pg[10]</td>
+<td align="right">0.542</td>
+<td align="right">0.009</td>
+<td align="right">0.498</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3372.248</td>
+<td align="right">1.001</td>
+</tr>
+</tbody>
+</table>
+<p>Let us say that we are willing to approve the treatment for further study in a subgroup if we have at least <span class="math inline">\(q = 70\)</span>% certainty that the probability of efficacy exceeds the target response rate of 30% On that basis, at this interim stage, we would be willing to approve the treatment in subgroups 3, 4, 5 and 8.</p>
+<p>Some distribution plots of the probabilities of efficacy in some subgroups may be informative.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(rstan)
+<span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">ProbResponse =</span> <span class="kw">extract</span>(samp, <span class="st">'p[3]'</span>)[[<span class="dv">1</span>]]),
+       <span class="kw">aes</span>(<span class="dt">x =</span> ProbResponse)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'Prob(Response | D) in Sub-group 3'</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Prob(Response | D) in subgroup 3" />
+<p class="caption">Prob(Response | D) in subgroup 3</p>
+</div>
+<p>We see that the inferred efficacy in subgroup 3 is very high.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">ProbResponse =</span> <span class="kw">extract</span>(samp, <span class="st">'p[4]'</span>)[[<span class="dv">1</span>]]),
+       <span class="kw">aes</span>(<span class="dt">x =</span> ProbResponse)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'Prob(Response | D) in Sub-group 4'</span>)</code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Prob(Response | D) in subgroup 4" />
+<p class="caption">Prob(Response | D) in subgroup 4</p>
+</div>
+<p>In contrast, efficacy is subject to more uncertainty in subgroup 4, but the majority of the mass clearly lies to the right of 30%.</p>
+</div>
+<div id="trialr" class="section level1">
+<h1>trialr</h1>
+<p><code>trialr</code> is available at <a href="https://github.com/brockk/trialr" class="uri">https://github.com/brockk/trialr</a></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Thall2003">
+<p>Thall, Peter F., J. Kyle Wathen, B. Nebiyou Bekele, Richard E. Champlin, Laurence H. Baker, and Robert S. Benjamin. 2003. “Hierarchical Bayesian approaches to phase II trials in diseases with multiple subtypes.” <em>Statistics in Medicine</em> 22 (5): 763–80. doi:<a href="https://doi.org/10.1002/sim.1399">10.1002/sim.1399</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

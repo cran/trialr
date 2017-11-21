@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kristian Brock" />
+
+<meta name="date" content="2017-11-20" />
+
+<title>BEBOP in PePS2</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">BEBOP in PePS2</h1>
+<h4 class="author"><em>Kristian Brock</em></h4>
+<h4 class="date"><em>2017-11-20</em></h4>
+
+
+
+<div id="introducing-the-bebop-design" class="section level1">
+<h1>Introducing the BEBOP design</h1>
+<p>The BEBOP phase II trial methodology incorporates predictive baseline information to study co-primary efficacy and toxicity outcomes. BEBOP stands for Bayesian Evaluation of Bivariate Binary Outcomes and Predictive Information. It was developed for the PePS2 trial, investigating pembrolizumab in non-small-cell lung cancer (NSCLC) patients with performance status 2 (PS2). A major factor in the PePS2 trial is the data on PS0 / 1 NSCLC patients published by <span class="citation">Garon et al. (2015)</span>, showing that patients with greater PD-L1 tumour proportion scores are more likely to achieve an objective response. They introduce this predictive biomarker and validate a three-level categorisation Low, Medium and High PD-L1 score. There was also a suggestion (albeit not shown to be <em>statistically significant</em>) that previously untreated patients are more likely to have a response. These same variables will likely be predictive of response in the PS2 population. Brock et al. (publication in submission) developed BEBOP to make efficient use of this information.</p>
+<p>BEBOP re-uses the probability model at the core of the EffTox design <span class="citation">(Thall and Cook 2004, <span class="citation">Thall et al. (2014)</span>)</span>. Let <span class="math inline">\(x\)</span> represent a vector of predictive baseline variables and <span class="math inline">\(\boldsymbol{\theta}\)</span> a vector of parameters. The marginal probabilities of efficacy and toxicity are estimated using general functions <span class="math inline">\(\text{logit } \pi_E(x, \boldsymbol{\theta})\)</span> and <span class="math inline">\(\text{logit } \pi_T(x, \boldsymbol{\theta})\)</span> to be specified by the user.</p>
+<p>In PePS2, we have <span class="math inline">\(x_{i1} = 1\)</span> if a patient has been previously treated. To convey PD-L1 expression, the authors use <span class="math inline">\(x_{i2} = 1\)</span> and <span class="math inline">\(x_{i3} = 0\)</span> if a patient has a Low PD-L1 score; <span class="math inline">\(x_{i2} = 0\)</span> and <span class="math inline">\(x_{i3} = 1\)</span> if a patient has a Medium PD-L1 score; and <span class="math inline">\(x_{i2} = 0\)</span> and <span class="math inline">\(x_{i3} = 0\)</span> if a patient has a High PD-L1 score. Thus, we have <span class="math inline">\(x_i = (x_{i1}, x_{i2}, x_{i3})\)</span>. The marginal efficacy and toxicity functions in PePS2 take the form</p>
+<p><span class="math inline">\(\text{logit } \pi_E(x, \boldsymbol{\theta}) = \alpha + \beta x_{i1} + \gamma x_{i2} + \zeta x_{i3}\)</span></p>
+<p><span class="math inline">\(\text{logit } \pi_T(x, \boldsymbol{\theta}) = \lambda\)</span></p>
+<p>Efficacy and toxicity events are then modelled using the joint probability function</p>
+<p><span class="math inline">\(\pi_{a,b} = (\pi_E)^a (1-\pi_E)^{1-a} (\pi_T)^b (1-\pi_T)^{1-b} + (-1)^{a+b} (\pi_E) (1-\pi_E) (\pi_T) (1-\pi_T) \frac{e^\psi-1}{e^\psi+1}\)</span>.</p>
+<p>where <span class="math inline">\(a,b\)</span> are dummy variables taking the value 1 if a patient experienced efficacy and toxicity respectively, else 0.</p>
+<p>The complete vector of parameters is <span class="math inline">\(\boldsymbol{\theta} = (\alpha, \beta, \gamma, \zeta, \lambda, \psi)\)</span>. Normal priors are specified for the elements of <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
+<p>The treatment is acceptable for patients with predictive vector <span class="math inline">\(x\)</span> if</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_E(x, \boldsymbol{\theta}) &gt; \underline{\pi}_E | \mathcal{D} \right\} &gt; p_E\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(\text{Pr}\left\{ \pi_T(x, \boldsymbol{\theta}) &lt; \overline{\pi}_T | \mathcal{D} \right\} &gt; p_T\)</span></p>
+<p>where <span class="math inline">\(\underline{\pi}_E, \overline{\pi}_T, p_E, p_T\)</span> are chosen for clinical relevance.</p>
+<p>PePS2 is an all-comers trial, thus patients are admitted regardless of their PD-L1 or pre-treatment status. This is motivated by the dearth of treatment options for PS2 NSCLC patients who cannot use chemotherapy. The design allows the predictive information to effectively stratify the analysis without stratifying recruitment. The statistical design uses the common Bayesian tool of borrowing strength across groups to improve the performance of the analysis.</p>
+</div>
+<div id="peps2-scenario-in-trialr" class="section level1">
+<h1>PePS2 Scenario in <code>trialr</code></h1>
+<p>The cohorts in the PePS2 trial are</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">i</th>
+<th align="left">Pretreated</th>
+<th align="left">PDL1</th>
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="left">Low</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">FALSE</td>
+<td align="left">Medium</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">FALSE</td>
+<td align="left">High</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">TRUE</td>
+<td align="left">Low</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">TRUE</td>
+<td align="left">Medium</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">TRUE</td>
+<td align="left">High</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>The trial uses a sample size of 60. Let us simulate a set of outcomes with the following efficacy and toxicity rates</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trialr)
+peps2_sc &lt;-<span class="st"> </span><span class="cf">function</span>() <span class="kw">peps2_get_data</span>(<span class="dt">num_patients =</span> <span class="dv">60</span>,
+                                      <span class="dt">prob_eff =</span> <span class="kw">c</span>(<span class="fl">0.167</span>, <span class="fl">0.192</span>, <span class="fl">0.5</span>, <span class="fl">0.091</span>, <span class="fl">0.156</span>, <span class="fl">0.439</span>),
+                                      <span class="dt">prob_tox =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, <span class="dv">6</span>),
+                                      <span class="dt">eff_tox_or =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">6</span>))
+
+<span class="kw">set.seed</span>(<span class="dv">123</span>)
+dat &lt;-<span class="st"> </span><span class="kw">peps2_sc</span>()</code></pre></div>
+<p>In this example, we have used efficacy rates that increase in PD-L1 and are slightly higher in previously-uintreated patients. We use the uniform toxicity rate of 10% across all cohorts, and no association between efficacy and toxicity events, represented by odds-ratios equal to 1.</p>
+<p>The <code>dat</code> object contains, for example, the prior parameters</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(dat<span class="op">$</span>alpha_mean, dat<span class="op">$</span>alpha_sd)</code></pre></div>
+<pre><code>## [1] -2.2  2.0</code></pre>
+<p>and simulated predictive variables and efficacy and toxicity outcomes</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(
+  <span class="kw">head</span>(<span class="kw">with</span>(dat, <span class="kw">data.frame</span>(eff, tox, x1, x2, x3)), <span class="dv">10</span>)
+)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">eff</th>
+<th align="right">tox</th>
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>We fit the data to the BEBOP model and obtain samples from the posterior distribution using <code>rstan</code>. The <code>BebopInPeps2</code> model is provided by <code>trialr</code> and compiled when the package is installed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp &lt;-<span class="st"> </span>rstan<span class="op">::</span><span class="kw">sampling</span>(stanmodels<span class="op">$</span>BebopInPeps2, <span class="dt">data =</span> dat)</code></pre></div>
+<pre><code>## trying deprecated constructor; please alert package maintainer</code></pre>
+<p>It is informative to view plots of posterior beliefs. Posterior samples of parameter values are available but they are less meaningful to us than the modelled efficacy rates, for example. View posterior distributions using code like</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rstan<span class="op">::</span><span class="kw">plot</span>(samp, <span class="dt">pars =</span> <span class="st">'prob_eff'</span>)</code></pre></div>
+<pre><code>## ci_level: 0.8 (80% intervals)</code></pre>
+<pre><code>## outer_level: 0.95 (95% intervals)</code></pre>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Posterior Prob(Efficacy) in the six PePS2 cohorts" />
+<p class="caption">Posterior Prob(Efficacy) in the six PePS2 cohorts</p>
+</div>
+<p>We see that the modelled rates of efficacy are highest in cohorts 3 and 6, but likely to be greater than the critical threshold of 10% in cohort 2 and perhaps cohort 5 as well. In contrast, there is not much evidence of clinical benefit in cohorts 1 and 4. This is confirmed by invoking the formally described analysis and associated decision rules.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">decision &lt;-<span class="st"> </span><span class="kw">peps2_process</span>(dat, samp)
+knitr<span class="op">::</span><span class="kw">kable</span>(
+  <span class="kw">with</span>(decision, <span class="kw">data.frame</span>(ProbEff, ProbAccEff, ProbTox, ProbAccTox, Accept)), 
+  <span class="dt">digits =</span> <span class="dv">3</span>
+)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ProbEff</th>
+<th align="right">ProbAccEff</th>
+<th align="right">ProbTox</th>
+<th align="right">ProbAccTox</th>
+<th align="left">Accept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.074</td>
+<td align="right">0.254</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">0.252</td>
+<td align="right">0.984</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">0.428</td>
+<td align="right">0.988</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">0.040</td>
+<td align="right">0.094</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">0.151</td>
+<td align="right">0.745</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">0.284</td>
+<td align="right">0.952</td>
+<td align="right">0.069</td>
+<td align="right">1</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<p>ProbAccEff is the posterior probability that the efficacy rate in a cohort is greater than the 10% threshold. ProbAccTox is the probability that toxicity is less than 30%. The treatment is acceptable in a cohort if it is sufficiently efficacious and non-toxic. We see that in this simulated iteration, the treatment would be approved in all cohorts except 1 and 4.</p>
+<p>We can perform the simulations on a greater number of iterations to learn about the operating characteristics of the design.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+sims &lt;-<span class="st"> </span><span class="kw">peps2_run_sims</span>(<span class="dt">num_sims =</span> <span class="dv">10</span>, <span class="dt">sample_data_func =</span> peps2_sc,
+                       <span class="dt">summarise_func =</span> peps2_process)</code></pre></div>
+<p>In <code>peps2_run_sims</code>, the second and third args are delegates to simulate trial outcomes and post-process the <code>rstan</code> sample respectively. The outcome samping delelgate is called without arguments. The post-process delegate is called with first argument the object returned by the outcome sampling delegate (e.g. <code>dat</code> above), and second argument the posterior sample from <code>rstan</code> (e.g. <code>samp</code> above). The objects returned by the post-process delegate form the items in the <code>sims</code> object that are returned to the user by <code>peps2_run_sims</code>.</p>
+<p>Thus, the probaility of approving the treatment using the statistical design in this scenario can be calculated using</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(<span class="kw">sapply</span>(sims, <span class="cf">function</span>(x) x<span class="op">$</span>Accept), <span class="dv">1</span>, mean)</code></pre></div>
+</div>
+<div id="trialr" class="section level1">
+<h1>trialr</h1>
+<p><code>trialr</code> is available at <a href="https://github.com/brockk/trialr" class="uri">https://github.com/brockk/trialr</a></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Garon2015">
+<p>Garon, Edward B, Naiyer a Rizvi, Rina Hui, Natasha Leighl, Ani S Balmanoukian, Joseph Paul Eder, Amita Patnaik, et al. 2015. “Pembrolizumab for the treatment of non-small-cell lung cancer.” <em>The New England Journal of Medicine</em> 372 (21): 2018–28. doi:<a href="https://doi.org/10.1056/NEJMoa1501824">10.1056/NEJMoa1501824</a>.</p>
+</div>
+<div id="ref-Thall2004">
+<p>Thall, PF, and JD Cook. 2004. “Dose-Finding Based on Efficacy-Toxicity Trade-Offs.” <em>Biometrics</em> 60 (3): 684–93.</p>
+</div>
+<div id="ref-Thall2014">
+<p>Thall, PF, RC Herrick, HQ Nguyen, JJ Venier, and JC Norris. 2014. “Effective sample size for computing prior hyperparameters in Bayesian phase I-II dose-finding.” <em>Clinical Trials</em> 11 (6): 657–66. doi:<a href="https://doi.org/10.1177/1740774514547397">10.1177/1740774514547397</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
