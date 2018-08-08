@@ -5,3 +5,11 @@ trialr
 ggplot2
 StanHeaders
 rstan
+loo
+dfcrm
+tidyr
+dplyr
+bindrcpp
+ggridges
+magrittr
+testthat
