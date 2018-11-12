@@ -1,8 +1,8 @@
 Package: trialr
 Type: Package
 Title: Clinical Trial Designs in 'RStan'
-Version: 0.0.4
-Date: 2018-10-16
+Version: 0.0.5
+Date: 2018-11-10
 Authors@R: c(person("Kristian", "Brock", email = "kristian.brock@gmail.com", role = c("aut", "cre")),
              person("Trustees of", "Columbia University", role = "cph"))
 Maintainer: Kristian Brock <kristian.brock@gmail.com>
@@ -19,6 +19,7 @@ Description: A showcase of Bayesian clinical trial designs, implemented in
     Bayesian methods are used most. If there is a published Bayesian design you
     want implemented in 'Stan', get in touch.
 License: GPL-3
+SystemRequirements: GNU make
 Depends: R (>= 3.4.0), Rcpp (>= 0.12.8), methods (>= 3.3.2)
 Imports: rstan (>= 2.18.1), rstantools (>= 1.1.0), loo (>= 1.1.0),
         gtools, stringr, dplyr, tidyr, magrittr, ggplot2
@@ -30,8 +31,8 @@ BugReports: https://github.com/brockk/trialr/issues
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-10-24 10:52:38 UTC; k
+Packaged: 2018-11-12 14:42:10 UTC; k
 Author: Kristian Brock [aut, cre],
   Trustees of Columbia University [cph]
 Repository: CRAN
-Date/Publication: 2018-10-24 21:30:03 UTC
+Date/Publication: 2018-11-12 16:40:03 UTC
