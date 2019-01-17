@@ -1,8 +1,8 @@
 Package: trialr
 Type: Package
 Title: Clinical Trial Designs in 'RStan'
-Version: 0.0.5
-Date: 2018-11-10
+Version: 0.0.6
+Date: 2019-01-16
 Authors@R: c(person("Kristian", "Brock", email = "kristian.brock@gmail.com", role = c("aut", "cre")),
              person("Trustees of", "Columbia University", role = "cph"))
 Maintainer: Kristian Brock <kristian.brock@gmail.com>
@@ -31,8 +31,8 @@ BugReports: https://github.com/brockk/trialr/issues
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-11-12 14:42:10 UTC; k
+Packaged: 2019-01-16 20:29:14 UTC; k
 Author: Kristian Brock [aut, cre],
   Trustees of Columbia University [cph]
 Repository: CRAN
-Date/Publication: 2018-11-12 16:40:03 UTC
+Date/Publication: 2019-01-17 14:10:03 UTC
