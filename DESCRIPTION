@@ -1,10 +1,15 @@
 Package: trialr
 Type: Package
 Title: Clinical Trial Designs in 'RStan'
-Version: 0.0.6
-Date: 2019-01-16
-Authors@R: c(person("Kristian", "Brock", email = "kristian.brock@gmail.com", role = c("aut", "cre")),
-             person("Trustees of", "Columbia University", role = "cph"))
+Version: 0.0.7
+Date: 2019-02-24
+Authors@R: c(
+  person("Kristian", "Brock", 
+         email = "kristian.brock@gmail.com", 
+         role = c("aut", "cre"),
+         comment = c(ORCID = "0000-0002-3921-0166")),
+  person("Trustees of", "Columbia University", 
+         role = "cph"))
 Maintainer: Kristian Brock <kristian.brock@gmail.com>
 Description: A showcase of Bayesian clinical trial designs, implemented in 
     'RStan' and R. Some designs are implemented in R for the first
@@ -31,8 +36,8 @@ BugReports: https://github.com/brockk/trialr/issues
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2019-01-16 20:29:14 UTC; k
-Author: Kristian Brock [aut, cre],
+Packaged: 2019-03-02 09:33:10 UTC; k
+Author: Kristian Brock [aut, cre] (<https://orcid.org/0000-0002-3921-0166>),
   Trustees of Columbia University [cph]
 Repository: CRAN
-Date/Publication: 2019-01-17 14:10:03 UTC
+Date/Publication: 2019-03-03 17:30:03 UTC
