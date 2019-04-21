@@ -57,6 +57,7 @@
 #'
 #' @return Matrix of events represented as 0s and 1s, with \code{nRep} rows
 #' and 2 columns. The first column is the incidence of event 1.
+#'
 #' @export
 #'
 #' @examples

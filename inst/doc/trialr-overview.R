@@ -19,6 +19,9 @@ mod1 <- stan_crm(outcome_str = '2NN 3NN 4TT', skeleton = skeleton,
 ## ------------------------------------------------------------------------
 mod1
 
+## ------------------------------------------------------------------------
+mod1$recommended_dose
+
 ## ---- fig.width=7, fig.height=7------------------------------------------
 library(ggplot2)
 plot_df = data.frame(DoseLevel = 1:length(skeleton),
@@ -30,35 +33,35 @@ ggplot(plot_df, aes(x = DoseLevel, y = ProbTox)) +
 
 ## ---- results = "hide"---------------------------------------------------
 outcomes <- '1NNE 2EEB'
-mod <- stan_efftox_demo(outcomes, seed = 123)
+mod2 <- stan_efftox_demo(outcomes, seed = 123)
 
 ## ------------------------------------------------------------------------
-mod
+mod2
 
 ## ------------------------------------------------------------------------
-mod$recommended_dose
+mod2$recommended_dose
 
 ## ------------------------------------------------------------------------
-mod$utility
+mod2$utility
 
 ## ---- fig.width=7, fig.height=7------------------------------------------
-efftox_contour_plot(mod$dat, prob_eff = mod$prob_eff, prob_tox = mod$prob_tox)
+efftox_contour_plot(mod2)
 title('EffTox utility contours')
 
-## ------------------------------------------------------------------------
-dat <- thallhierarchicalbinary_parameters_demo()
-dat
-
 ## ---- results = "hide"---------------------------------------------------
-samp <- rstan::sampling(stanmodels$ThallHierarchicalBinary, data = dat, 
-                        seed = 123)
+mod3 <- stan_hierarchical_response_thall(
+  group_responses = c(0, 0, 1, 3, 5, 0, 1, 2, 0, 0), 
+  group_sizes = c(0, 2 ,1, 7, 5, 0, 2, 3, 1, 0), 
+  mu_mean = -1.3863,
+  mu_sd = sqrt(1 / 0.1),
+  tau_alpha = 2,
+  tau_beta = 20)
+
+## ------------------------------------------------------------------------
+mod3
 
 ## ---- fig.width=7, fig.height=7, warning=FALSE, message=FALSE------------
-library(dplyr)
-library(tidyr)
-as.data.frame(samp, 'p') %>% 
-  gather(Cohort, ProbResponse) %>% 
-  ggplot(aes(x = Cohort, y = ProbResponse, group = Cohort)) + 
-  geom_boxplot() + geom_hline(yintercept = 0.3, col = 'orange', linetype = 'dashed') +
+rstan::plot(mod3, pars = 'prob_response') + 
+  geom_vline(xintercept = 0.3, col = 'orange', linetype = 'dashed') +
   labs(title = 'Partially-pooled analysis of response rate in 10 sarcoma subtypes')
 
