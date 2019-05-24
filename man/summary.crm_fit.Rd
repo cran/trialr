@@ -17,3 +17,6 @@ A summary object.
 \description{
 Obtain summary of an crm_fit
 }
+\seealso{
+\code{\link{stan_crm}}
+}
