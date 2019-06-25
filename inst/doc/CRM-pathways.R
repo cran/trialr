@@ -109,30 +109,34 @@ df3 <- as_tibble(paths3)
 spread_paths(df3 %>% select(-fit, -parent_fit, -dose_index))
 
 ## ---- fig.width=6, fig.height=6------------------------------------------
-library(DiagrammeR)
-
-df3 %>%
-  transmute(id = .node,
-            type = NA,
-            label = case_when(
-              is.na(next_dose) ~ 'Stop',
-              TRUE ~ next_dose %>% as.character()),
-            shape = 'circle',
-            fillcolor = case_when(
-              next_dose == 1 ~ 'slategrey',
-              next_dose == 2 ~ 'skyblue1',
-              next_dose == 3 ~ 'royalblue1',
-              next_dose == 4 ~ 'orchid4',
-              next_dose == 5 ~ 'royalblue4',
-              is.na(next_dose) ~ 'red'
-            )
-  ) -> ndf
-
-df3 %>% 
-  filter(!is.na(.parent)) %>% 
-  select(from = .parent, to = .node, label = outcomes) %>% 
-  mutate(rel = "leading_to") -> edf
-
-graph <- create_graph(nodes_df = ndf, edges_df = edf)
-render_graph(graph)
+# This section of code outputs to the Viewer pane in RStudio
+if(Sys.getenv("RSTUDIO") == "1") {
+  
+  library(DiagrammeR)
+  
+  df3 %>%
+    transmute(id = .node,
+              type = NA,
+              label = case_when(
+                is.na(next_dose) ~ 'Stop',
+                TRUE ~ next_dose %>% as.character()),
+              shape = 'circle',
+              fillcolor = case_when(
+                next_dose == 1 ~ 'slategrey',
+                next_dose == 2 ~ 'skyblue1',
+                next_dose == 3 ~ 'royalblue1',
+                next_dose == 4 ~ 'orchid4',
+                next_dose == 5 ~ 'royalblue4',
+                is.na(next_dose) ~ 'red'
+              )
+    ) -> ndf
+  
+  df3 %>% 
+    filter(!is.na(.parent)) %>% 
+    select(from = .parent, to = .node, label = outcomes) %>% 
+    mutate(rel = "leading_to") -> edf
+  
+  graph <- create_graph(nodes_df = ndf, edges_df = edf)
+  render_graph(graph)
+}
 
