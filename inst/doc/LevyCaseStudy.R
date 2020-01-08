@@ -41,14 +41,29 @@ tibble(a0 = c(-1, 0, 1, 2, 3, 4)) %>%
   mutate(
     Dose = Mod %>% map("dose_indices"),
     ProbTox = Mod %>% map("prob_tox"),
-    ) %>% 
+  ) %>% 
   select(-Mod) %>% 
-  unnest() %>% 
+  unnest(cols = c(Dose, ProbTox)) %>% 
   mutate(a0 = factor(a0)) %>% 
   ggplot(aes(x = Dose, y = ProbTox, group = a0, col = a0)) + 
   geom_line() + 
   ylim(0, 1) + 
   labs(title = 'Prior Prob(DLT) location is affected by the fixed intercept, a0')
+
+## ---- eval=FALSE---------------------------------------------------------
+#  tibble(a0 = c(-1, 0, 1, 2, 3, 4)) %>%
+#    mutate(Mod = map(a0, get_prior_fit)) %>%
+#    mutate(
+#      Dose = Mod %>% map("dose_indices"),
+#      ProbTox = Mod %>% map("prob_tox"),
+#      ) %>%
+#    select(-Mod) %>%
+#    unnest(cols = c(Dose, ProbTox)) %>%
+#    mutate(a0 = factor(a0)) %>%
+#    ggplot(aes(x = Dose, y = ProbTox, group = a0, col = a0)) +
+#    geom_line() +
+#    ylim(0, 1) +
+#    labs(title = 'Prior Prob(DLT) location is affected by the fixed intercept, a0')
 
 ## ---- results='hide', warning=FALSE--------------------------------------
 fit1 <- stan_crm(outcome_str = '1NNN', 
@@ -130,7 +145,7 @@ library(tidyr)
 df %>% 
   mutate(prob_tox = map(fit, 'prob_tox')) %>% 
   select(-fit, -parent_fit) %>% 
-  unnest %>% 
+  unnest(cols = c(dose_index, prob_tox)) %>% 
   filter(dose_index == 4)
 
 ## ------------------------------------------------------------------------
@@ -138,7 +153,7 @@ df %>%
   filter(.depth > 0) %>% 
   mutate(prob_tox = map(fit, 'prob_tox')) %>% 
   select(-fit, -parent_fit) %>% 
-  unnest %>% 
+  unnest(cols = c(dose_index, prob_tox)) %>% 
   filter(dose_index == 4) %>% 
   select(outcomes, prob_tox) %>% 
   bind_cols(
@@ -178,7 +193,7 @@ expand.grid(a0 = 1:4, beta_inverse_scale = c(0.5, 1, 2)) %>%
     ProbTox = Mod %>% map("prob_tox"),
   ) %>% 
   select(-Mod) %>% 
-  unnest() %>% 
+  unnest(cols = c(Dose, ProbTox)) %>% 
   mutate(a0 = factor(a0), 
          beta_inverse_scale = factor(beta_inverse_scale)) -> all_fits
 

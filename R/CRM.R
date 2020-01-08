@@ -1,34 +1,6 @@
 
 
 
-# Simple helpers ----
-#' @title Calculate codified CRM doses.
-#'
-#' @description Calculate the codified CRM doses that map to probability of
-#' toxicity \code{prob_tox} in a logistic model with expected values for
-#' intercept and gradient. I.e. find \eqn{x[i]} such that
-#' \eqn{logit(p[i]) = \alpha + \beta x[i]}, were \eqn{p} is
-#' \code{prob_tox}.
-#'
-#' @param prob_tox Numeric vector, seek codified doses that yield these
-#' probabilities of toxicity.
-#' @param alpha_mean Numeric, expected value of intercept.
-#' @param beta_mean Numeric, expected value of gradient with respect to dose.
-#'
-#' @return Numeric vector of codified doses.
-#' @export
-#'
-#' @examples
-#' skeleton <- c(0.05, 0.1, 0.2, 0.5)
-#' crm_codified_dose_logistic(skeleton, 1, 0)
-#' crm_codified_dose_logistic(skeleton, 3, 0.5)
-crm_codified_dose_logistic <- function(prob_tox, alpha_mean, beta_mean) {
-  (gtools::logit(prob_tox) - alpha_mean) / beta_mean
-}
-
-
-
-
 # Generics ----
 #' Print crm_fit object.
 #'
@@ -38,12 +10,12 @@ crm_codified_dose_logistic <- function(prob_tox, alpha_mean, beta_mean) {
 #' @export
 print.crm_fit <- function(x, ...) {
   # Patient-level data
-  if(x$dat$num_patients > 0) {
+  if(x$num_patients > 0) {
     treated <- data.frame(
-      Patient = 1:length(x$dat$doses),
-      Dose = x$dat$doses,
-      Toxicity = x$dat$tox,
-      Weight = x$dat$weights
+      Patient = 1:length(x$doses),
+      Dose = x$doses,
+      Toxicity = x$tox,
+      Weight = x$weights
     )
     print(treated)
   } else {
@@ -55,8 +27,8 @@ print.crm_fit <- function(x, ...) {
   df <- data.frame(
     Dose = factor(x$dose_indices),
     Skeleton = x$dat$skeleton,
-    N = sapply(1:x$dat$num_doses, function(i) sum(x$dat$doses == i)),
-    Tox = sapply(1:x$dat$num_doses, function(i) sum(x$dat$tox[x$dat$doses == i])),
+    N = sapply(1:length(x$dose_indices), function(i) sum(x$doses == i)),
+    Tox = sapply(1:length(x$dose_indices), function(i) sum(x$tox[x$doses == i])),
     ProbTox = x$prob_tox,
     MedianProbTox = x$median_prob_tox,
     ProbMTD = x$prob_mtd

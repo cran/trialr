@@ -19,11 +19,25 @@ test_that('stan_crm fits to zero patients', {
                 target = 0.25,
                 model = 'empiric',
                 beta_sd = 1)
-  expect_equal(x$dat$num_patients, 0)
-  expect_equal(length(x$dat$doses), 0)
-  expect_equal(length(x$dat$tox), 0)
-  expect_equal(length(x$dat$weights), 0)
-  expect_equal(x$dat$num_doses, 4)
+  expect_equal(x$num_patients, 0)
+  expect_equal(length(x$doses), 0)
+  expect_equal(length(x$tox), 0)
+  expect_equal(length(x$weights), 0)
+  expect_equal(length(x$dose_indices), 4)
+  expect_equal(n_at_dose(x), c(0, 0, 0, 0))
+  expect_equal(tox_at_dose(x), c(0, 0, 0, 0))
+  expect_error(eff_at_dose(x))
+  l <- weights_at_dose(x)
+  expect_equal(length(l), 4)
+  expect_equal(l[[1]], numeric(0))
+  expect_equal(l[[2]], numeric(0))
+  expect_equal(l[[3]], numeric(0))
+  expect_equal(l[[4]], numeric(0))
+  expect_equal(weights_at_dose(x, dose = 1), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 2), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 3), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 4), numeric(0))
+  expect_equal(total_weight_at_dose(x), c(0, 0, 0, 0))
 })
 
 test_that('stan_crm fits to one patient', {
@@ -32,24 +46,52 @@ test_that('stan_crm fits to one patient', {
                 target = 0.25,
                 model = 'empiric',
                 beta_sd = 1)
-  expect_equal(x$dat$num_patients, 1)
-  expect_equal(length(x$dat$doses), 1)
-  expect_equal(length(x$dat$tox), 1)
-  expect_equal(length(x$dat$weights), 1)
-  expect_equal(x$dat$num_doses, 4)
+  expect_equal(x$num_patients, 1)
+  expect_equal(length(x$doses), 1)
+  expect_equal(length(x$tox), 1)
+  expect_equal(length(x$weights), 1)
+  expect_equal(length(x$dose_indices), 4)
+  expect_equal(n_at_dose(x), c(1, 0, 0, 0))
+  expect_equal(tox_at_dose(x), c(0, 0, 0, 0))
+  expect_error(eff_at_dose(x))
+  l <- weights_at_dose(x)
+  expect_equal(length(l), 4)
+  expect_equal(l[[1]], c(1))
+  expect_equal(l[[2]], numeric(0))
+  expect_equal(l[[3]], numeric(0))
+  expect_equal(l[[4]], numeric(0))
+  expect_equal(weights_at_dose(x, dose = 1), c(1))
+  expect_equal(weights_at_dose(x, dose = 2), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 3), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 4), numeric(0))
+  expect_equal(total_weight_at_dose(x), c(1, 0, 0, 0))
 })
 
 test_that('stan_crm fits to two patients in one cohort', {
-  x <- stan_crm(outcome_str = '1NT',
+  x <- stan_crm(outcome_str = '2TT',
                 skeleton = c(0.1, 0.25, 0.4, 0.6),
                 target = 0.25,
                 model = 'empiric',
                 beta_sd = 1)
-  expect_equal(x$dat$num_patients, 2)
-  expect_equal(length(x$dat$doses), 2)
-  expect_equal(length(x$dat$tox), 2)
-  expect_equal(length(x$dat$weights), 2)
-  expect_equal(x$dat$num_doses, 4)
+  expect_equal(x$num_patients, 2)
+  expect_equal(length(x$doses), 2)
+  expect_equal(length(x$tox), 2)
+  expect_equal(length(x$weights), 2)
+  expect_equal(length(x$dose_indices), 4)
+  expect_equal(n_at_dose(x), c(0, 2, 0, 0))
+  expect_equal(tox_at_dose(x), c(0, 2, 0, 0))
+  expect_error(eff_at_dose(x))
+  l <- weights_at_dose(x)
+  expect_equal(length(l), 4)
+  expect_equal(l[[1]], numeric(0))
+  expect_equal(l[[2]], array(c(1, 1)))
+  expect_equal(l[[3]], numeric(0))
+  expect_equal(l[[4]], numeric(0))
+  expect_equal(weights_at_dose(x, dose = 1), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 2), array(c(1, 1)))
+  expect_equal(weights_at_dose(x, dose = 3), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 4), numeric(0))
+  expect_equal(total_weight_at_dose(x), c(0, 2, 0, 0))
 })
 
 test_that('stan_crm fits to two patients in two cohorts', {
@@ -58,12 +100,59 @@ test_that('stan_crm fits to two patients in two cohorts', {
                 target = 0.25,
                 model = 'empiric',
                 beta_sd = 1)
-  expect_equal(x$dat$num_patients, 2)
-  expect_equal(length(x$dat$doses), 2)
-  expect_equal(length(x$dat$tox), 2)
-  expect_equal(length(x$dat$weights), 2)
-  expect_equal(x$dat$num_doses, 4)
+  expect_equal(x$num_patients, 2)
+  expect_equal(length(x$doses), 2)
+  expect_equal(length(x$tox), 2)
+  expect_equal(length(x$weights), 2)
+  expect_equal(length(x$dose_indices), 4)
+  expect_equal(n_at_dose(x), c(1, 1, 0, 0))
+  expect_equal(tox_at_dose(x), c(0, 0, 0, 0))
+  expect_error(eff_at_dose(x))
+  l <- weights_at_dose(x)
+  expect_equal(length(l), 4)
+  expect_equal(l[[1]], c(1))
+  expect_equal(l[[2]], c(1))
+  expect_equal(l[[3]], numeric(0))
+  expect_equal(l[[4]], numeric(0))
+  expect_equal(weights_at_dose(x, dose = 1), c(1))
+  expect_equal(weights_at_dose(x, dose = 2), c(1))
+  expect_equal(weights_at_dose(x, dose = 3), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 4), numeric(0))
+  expect_equal(total_weight_at_dose(x), c(1, 1, 0, 0))
 })
+
+
+test_that('stan_crm fits when weights are provided', {
+  x <- stan_crm(skeleton = c(0.1, 0.25, 0.4, 0.6),
+                target = 0.25,
+                model = 'empiric',
+                beta_sd = 1,
+                doses = c(1, 1, 2, 2, 2),
+                tox   = c(0, 0, 0, 0, 0),
+                weights = c(1, 1, 0.9, 0.1, 0.1)
+                )
+  expect_equal(x$num_patients, 5)
+  expect_equal(length(x$doses), 5)
+  expect_equal(length(x$tox), 5)
+  expect_equal(length(x$weights), 5)
+  expect_equal(length(x$dose_indices), 4)
+  expect_equal(n_at_dose(x), c(2, 3, 0, 0))
+  expect_equal(tox_at_dose(x), c(0, 0, 0, 0))
+  expect_error(eff_at_dose(x))
+  l <- weights_at_dose(x)
+  expect_equal(length(l), 4)
+  expect_equal(l[[1]], array(c(1, 1)))
+  expect_equal(l[[2]], array(c(0.9, 0.1, 0.1)))
+  expect_equal(l[[3]], numeric(0))
+  expect_equal(l[[4]], numeric(0))
+  expect_equal(weights_at_dose(x, dose = 1), array(c(1, 1)))
+  expect_equal(weights_at_dose(x, dose = 2), array(c(0.9, 0.1, 0.1)))
+  expect_equal(weights_at_dose(x, dose = 3), numeric(0))
+  expect_equal(weights_at_dose(x, dose = 4), numeric(0))
+  expect_equal(total_weight_at_dose(x), c(2, 1.1, 0, 0))
+})
+
+
 
 # Accuracy checks ----
 

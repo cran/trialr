@@ -30,8 +30,19 @@ library(dplyr)
 df %>% 
   mutate(prob_tox = fit %>% map('prob_tox')) %>% 
   select(outcomes, dose_index, prob_tox) %>% 
-  unnest %>% 
+  unnest(cols = c(dose_index, prob_tox)) %>% 
   filter(dose_index == 2)
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  library(tidyr)
+#  library(purrr)
+#  library(dplyr)
+#  
+#  df %>%
+#    mutate(prob_tox = fit %>% map('prob_tox')) %>%
+#    select(outcomes, dose_index, prob_tox) %>%
+#    unnest %>%
+#    filter(dose_index == 2)
 
 ## ------------------------------------------------------------------------
 df %>% 

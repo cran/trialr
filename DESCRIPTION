@@ -1,6 +1,6 @@
 Package: trialr
-Version: 0.1.2
-Date: 2019-06-23
+Version: 0.1.3
+Date: 2019-12-26
 Title: Clinical Trial Designs in 'rstan'
 Description: A collection of clinical trial designs and methods, implemented in 
     'rstan' and R, including: the Continual Reassessment Method by O'Quigley et 
@@ -38,8 +38,8 @@ VignetteBuilder: knitr
 URL: https://github.com/brockk/trialr
 BugReports: https://github.com/brockk/trialr/issues
 Suggests: testthat, knitr, rmarkdown, ggridges, covr, DiagrammeR
-Packaged: 2019-06-25 07:39:19 UTC; k
+Packaged: 2019-12-26 19:05:41 UTC; k
 Author: Kristian Brock [aut, cre] (<https://orcid.org/0000-0002-3921-0166>),
   Trustees of Columbia University [cph]
 Repository: CRAN
-Date/Publication: 2019-06-25 11:40:03 UTC
+Date/Publication: 2020-01-08 22:30:10 UTC
