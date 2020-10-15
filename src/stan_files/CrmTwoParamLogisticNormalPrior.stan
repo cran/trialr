@@ -2,10 +2,13 @@
 // dose-finding using the logistic link function and a normal prior on the
 // parameters.
 //
-// i.e. F(x, beta) = exp{alpha + exp(beta) x} / (1 + exp{alpha + exp(beta) x})
-// where x is the skeleton (the prior dose-toxicity curve), alpha is the
-// intercept parameter alpha ~ N(alpha_mean, alpha_sd), and the slope parameter
+// i.e. F(x, alpha, beta) = 1 / (1 + exp{-(alpha + exp(beta) x)})
+// where x is the skeleton (the prior dose-toxicity curve), the intercept
+// parameter is
+// alpha ~ N(alpha_mean, alpha_sd)
+// and the slope parameter is
 // beta ~ N(beta_mean, beta_sd).
+//
 // The slope is exponentiated because it is required to be positive for
 // monotonic dose-toxicity curves. See p.18 Cheung (2011).
 // However, the intercept can take any value so it is not exponentiated.
